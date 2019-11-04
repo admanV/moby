@@ -185,6 +185,19 @@ func getCPUResources(config containertypes.Resources) (*specs.LinuxCPU, error) {
 	return &cpu, nil
 }
 
+func getHugepageResources(config containertypes.Resources) []specs.LinuxHugepageLimit {
+	var hugepages []specs.LinuxHugepageLimit
+
+	for _, hugepage := range config.Hugepages {
+		hugepages = append(hugepages, specs.LinuxHugepageLimit{
+			Pagesize: hugepage.PageSize,
+			Limit:    hugepage.Limit,
+		})
+	}
+
+	return hugepages
+}
+
 func getBlkioWeightDevices(config containertypes.Resources) ([]specs.LinuxWeightDevice, error) {
 	var stat unix.Stat_t
 	var blkioWeightDevices []specs.LinuxWeightDevice
